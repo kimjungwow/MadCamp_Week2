@@ -157,7 +157,7 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
             @Override
             public void onClick(View view) {
                 if (WritePermissioncheck()) {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), com.cs496.myapplication.AddContactActivity.class);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), com.example.cs496_week2.AddContactActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getContext(), "Cannot add contact.", Toast.LENGTH_SHORT).show();

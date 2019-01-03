@@ -1,13 +1,9 @@
 package com.example.cs496_week2;
 
-import android.Manifest;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.graphics.Color;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -20,12 +16,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -141,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     return tab1;
                 case 1:
 
-                    Tab2Gallery tab2 = new Tab2Gallery();
+                    Tab2Images tab2 = new Tab2Images();
                     return tab2;
                 case 2:
                     Tab3Etc tab3 = new Tab3Etc();
