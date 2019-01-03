@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">CS496_Week2</string>
+    <string name="app_name">승원정우</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_3">Tab 3</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <color name="white">#FFFFFF</color>
+    <color name="blueviolet">#8a2be2</color>
+    <color name="navy">#000080</color>
+    <color name="mediumblue">#0000cd</color>
+    <color name="skyblue">#87ceeb</color>
+    <color name="royalblue">#4169e1</color>
 </resources>

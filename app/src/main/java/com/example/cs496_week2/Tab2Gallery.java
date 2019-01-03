@@ -1,5 +1,3 @@
-
-
 package com.example.cs496_week2;
 
 import android.os.Bundle;
