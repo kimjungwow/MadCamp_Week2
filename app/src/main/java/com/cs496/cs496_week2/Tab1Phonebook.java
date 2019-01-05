@@ -64,6 +64,7 @@ import java.util.Arrays;
 import static com.facebook.AccessTokenManager.TAG;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
+
 public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ListView contactsListView;
@@ -89,6 +90,8 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
     ShareDialog shareDialog;
     private TextView tv;
     private LoginButton loginButton;
+    private String  userid;
+
 
 
     @Override
@@ -99,6 +102,20 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
         //        Log.i("전화번호부 fragment", "onCreateView()");
 //
         View rootView = inflater.inflate(R.layout.tab1phonebook, container, false);
+
+        userid = ((MainActivity)getActivity()).getjson;
+
+        Toast.makeText(getContext(), userid, Toast.LENGTH_LONG).show();
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -403,6 +420,7 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
 
                 JSONObject obj = new JSONObject();
                 try {
+                    obj.put("fbid", userid);
                     obj.put("name", name);
                     obj.put("number", phoneNumber);
 //                    obj.put("img", getStringFromBitmap(bp));

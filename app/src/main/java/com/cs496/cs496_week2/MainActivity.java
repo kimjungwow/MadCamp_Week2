@@ -1,5 +1,6 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -16,7 +17,24 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -42,13 +60,20 @@ public class MainActivity extends AppCompatActivity {
     public static String imageStoragePath;
     // key to store image path in savedInstance state
     public static final String KEY_IMAGE_STORAGE_PATH = "image_path";
+    private CallbackManager callbackManager;
+//    LoginButton facebook_login;
 
+
+public String getjson;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        printKeyHash();
+        Intent intent = getIntent();
+        getjson  = intent.getStringExtra("gotjson");
 
 
 
@@ -76,20 +101,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void printKeyHash() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.cs496.myapplication", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance(("SHA"));
-                md.update(signature.toByteArray());
-                Log.d("KeyHash", Base64.encodeToString(md.digest(),Base64.DEFAULT));
 
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.cs496.cs496_week2", //앱의 패키지 명
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
+
+
+
+
+
     }
+
+
 
 
     @Override
@@ -167,9 +199,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Saving stored image path to saved instance state
-     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+        /**
+         * Saving stored image path to saved instance state
+         */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

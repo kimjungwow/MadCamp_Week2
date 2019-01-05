@@ -14,16 +14,18 @@
     tools:context=".MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
+
+
     <ListView
         android:id="@+id/contactLV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:divider="@null"
+        android:layout_marginBottom="80dp"
         android:choiceMode="singleChoice"
-        android:listSelector="#CCCBCB"
-        android:layout_marginBottom="80dp"></ListView>
+        android:divider="@null"
+        android:listSelector="#CCCBCB"></ListView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addContactButton"
@@ -50,15 +52,5 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="end|bottom"
         app:srcCompat="@android:drawable/ic_dialog_email"/>
-
-    <TextView
-        android:id="@+id/tvData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="63dp"
-        android:text="TextView" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;

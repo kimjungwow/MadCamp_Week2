@@ -1,4 +1,4 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +10,7 @@ public class Tab3Etc extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         View rootView = inflater.inflate(R.layout.tab3etc, container, false);
 

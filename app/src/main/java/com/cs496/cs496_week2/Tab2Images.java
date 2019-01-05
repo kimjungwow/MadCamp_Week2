@@ -1,4 +1,4 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 

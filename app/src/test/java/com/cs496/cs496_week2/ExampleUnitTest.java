@@ -1,4 +1,4 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 
 import org.junit.Test;
 

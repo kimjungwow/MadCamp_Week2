@@ -11,6 +11,12 @@
     <color name="mediumblue">#0000cd</color>
     <color name="skyblue">#87ceeb</color>
     <color name="royalblue">#4169e1</color>
+
+    <string name="facebook_app_id">2082225295169437</string>
+
+
+    <string name="fb_login_protocol_scheme">fb2082225295169437</string>
+
     <string name="preview_description">Image and Video preview will appear here</string>
     <string name="btn_take_picture">Take Picture</string>
 </resources>

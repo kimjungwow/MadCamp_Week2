@@ -1,4 +1,4 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
