@@ -1,108 +1,97 @@
-package com.example.cs496_week2;
+package com.cs496.cs496_week2;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.provider.Settings;
-import android.provider.Telephony;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.PermissionChecker;
-import android.text.Layout;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.Bitmap;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Downloader;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.facebook.HttpMethod.POST;
+import static com.facebook.AccessTokenManager.TAG;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
-    TextView tvData;
+
     private ListView contactsListView;
     private Tab1ContactViewAdapter adapter;
     private ArrayList<ContactModel> contactModelArrayList;
     private ArrayList<JSONObject> jsonArr = new ArrayList<JSONObject>();
+    private ArrayList<String> xjsonArr = new ArrayList<String>();
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS};
     public int sel_pos = -1;
     private JSONObject big;
+
 
     private String urlstring = "http://socrip3.kaist.ac.kr:9080/api/contacts";
     private FloatingActionButton msgButton;
     private FloatingActionButton addButton;
     private RequestQueue mQueue;
     private URL url;
+    private CallbackManager callbackManager;
+    ShareDialog shareDialog;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i("전화번호부 fragment", "onCreateView()");
+
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         View rootView = inflater.inflate(R.layout.tab1phonebook, container, false);
-        tvData = (TextView) getActivity().findViewById(R.id.tvData);
+        shareDialog = new ShareDialog(getActivity());
 
+
+        //Need to "GET"
         mQueue = Volley.newRequestQueue(getContext());
-
-
-
-
-
+        LoginButton facebookLoginButton = (LoginButton) getActivity().findViewById(R.id.facebook_login_button);
 
 
         contactsListView = rootView.findViewById(R.id.contactLV);
@@ -112,6 +101,28 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
 
         msgButton = (FloatingActionButton) rootView.findViewById(R.id.messageButton);
         addButton = rootView.findViewById(R.id.addContactButton);
+        facebookLoginButton = rootView.findViewById(R.id.facebook_login_button);
+
+        facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                Log.i(TAG, "User ID: " + loginResult.getAccessToken().getUserId());
+                Log.i(TAG, "Auth Token: " + loginResult.getAccessToken().getToken());
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Log.w(TAG, "Cancel");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.e(TAG, "Error", exception);
+            }
+        });
 
 
         return rootView;
@@ -121,6 +132,9 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
     public void onResume() {
         super.onResume();
         Log.i("전화번호부 fragment", "onResume()");
+
+
+        AppEventsLogger.activateApp(getContext());
 
         if (Permissioncheck()) {
             loadContacts(contactsListView);
@@ -142,59 +156,6 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
                     sel_pos = position;
                 }
 
-//                jsonParse();
-
-
-
-
-//                HttpURLConnection httpURLConnection = null;
-//                try{
-
-//                    httpURLConnection = (HttpURLConnection) url.openConnection();
-//
-//                    httpURLConnection.setRequestMethod("GET"); // URL 요청에 대한 메소드 설정 : POST.
-////                    httpURLConnection.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
-////                    httpURLConnection.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;cahrset=UTF-8");
-//                    httpURLConnection.setReadTimeout(10000);
-//                    httpURLConnection.setConnectTimeout(10000);
-//                    httpURLConnection.setDoOutput(true);
-////                    httpURLConnection.setDoInput(true);
-//
-//
-//                    httpURLConnection.connect();
-//
-//
-////                    InputStream is = httpURLConnection.getInputStream(); //input스트림 개방
-//
-//
-//
-//                    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-//                    StringBuilder builder = new StringBuilder(); //문자열을 담기 위한 객체
-////                    BufferedReader reader = new BufferedReader(new InputStreamReader(is)); //문자열 셋 세팅
-////                    BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8")); //문자열 셋 세팅
-//
-//                    String line;
-//
-//                    while ((line = reader.readLine()) != null) {
-//                        builder.append(line+ "\n");
-//                    }
-//                    reader.close();
-//
-//                    String result = builder.toString();
-////                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-//
-//
-//
-//
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    if (httpURLConnection != null) {
-//                        httpURLConnection.disconnect();
-//                    }
-//                }
 
             }
 
@@ -202,65 +163,127 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
         msgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (contactsListView.getCheckedItemCount() != 0 && sel_pos != -1) {
-
-
-                    Uri smsUri;
-
-                    String temp = ((ContactModel) contactsListView.getItemAtPosition(sel_pos)).getNumber();
-                    String phone[] = new String[1];
-                    if (temp.contains("-")) {
-                        String phonenumbers[] = temp.split("-");
-                        StringBuilder sb = new StringBuilder("010");
-                        sb.append(phonenumbers[1]);
-                        sb.append(phonenumbers[2]);
-
-                        phone[0] = sb.toString();
-                    } else {
-                        phone[0] = temp;
-                    }
-
-
-                    smsUri = Uri.parse("smsto:" + Uri.encode(TextUtils.join(",", phone)));
-
-
-                    Intent intent;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        intent = new Intent(Intent.ACTION_SENDTO, smsUri);
-                        intent.setPackage(Telephony.Sms.getDefaultSmsPackage(getActivity().getApplicationContext()));
-                    } else {
-                        intent = new Intent(Intent.ACTION_VIEW, smsUri);
-                    }
-                    contactsListView.clearChoices();
-                    startActivity(intent);
-
-                } else {
-                    String defaultApplication = Settings.Secure.getString(getContext().getContentResolver(), "sms_default_application");
-                    PackageManager pm = getContext().getPackageManager();
-                    Intent intent = pm.getLaunchIntentForPackage(defaultApplication);
-
-                    startActivity(intent);
-
+                if (Permissioncheck()) {
+                    loadContacts(contactsListView);
                 }
+
+//                if (contactsListView.getCheckedItemCount() != 0 && sel_pos != -1) {
+//
+//
+//                    Uri smsUri;
+//
+//                    String temp = ((ContactModel) contactsListView.getItemAtPosition(sel_pos)).getNumber();
+//                    String phone[] = new String[1];
+//                    if (temp.contains("-")) {
+//                        String phonenumbers[] = temp.split("-");
+//                        StringBuilder sb = new StringBuilder("010");
+//                        sb.append(phonenumbers[1]);
+//                        sb.append(phonenumbers[2]);
+//
+//                        phone[0] = sb.toString();
+//                    } else {
+//                        phone[0] = temp;
+//                    }
+//
+//
+//                    smsUri = Uri.parse("smsto:" + Uri.encode(TextUtils.join(",", phone)));
+//
+//
+//                    Intent intent;
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                        intent = new Intent(Intent.ACTION_SENDTO, smsUri);
+//                        intent.setPackage(Telephony.Sms.getDefaultSmsPackage(getActivity().getApplicationContext()));
+//                    } else {
+//                        intent = new Intent(Intent.ACTION_VIEW, smsUri);
+//                    }
+//                    contactsListView.clearChoices();
+//                    startActivity(intent);
+//
+//                } else {
+//                    String defaultApplication = Settings.Secure.getString(getContext().getContentResolver(), "sms_default_application");
+//                    PackageManager pm = getContext().getPackageManager();
+//                    Intent intent = pm.getLaunchIntentForPackage(defaultApplication);
+//
+//                    startActivity(intent);
+//
+//                }
             }
         });
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlstring, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("TAG", response.toString());
+                        Intent intent;
+                        intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+
+
+                        try {
+                            JSONArray contacts = response;
+
+
+                            Log.d("JsonArray", contacts.toString());
+                            for (int i = 0; i < contacts.length(); i++) {
+                                JSONObject jresponse = contacts.getJSONObject(i);
+
+                                String name = jresponse.getString("name");
+                                Log.d("nickname", name);
+                                String number = jresponse.getString("number");
+//                                if(i==0)
+
+//                                    Toast.makeText(getContext(),name+number,Toast.LENGTH_LONG).show();
+
+                                if (!xjsonArr.contains(name)) {
+                                intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+                                intent.putExtra(ContactsContract.Intents.Insert.NAME, name);
+                                intent.putExtra(ContactsContract.Intents.Insert.PHONE, number);
+                                startActivity(intent);
+                            }
+
+                        }
+                    } catch(
+                    JSONException e)
+
+                    {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            },new Response.ErrorListener()
+
+            {
+                @Override
+                public void onErrorResponse (VolleyError error){
+                error.printStackTrace();
+
+            }
+            });
+                mQueue.add(request);
+
+
 //                if (WritePermissioncheck()) {
 //                    Intent intent = new Intent(getActivity().getApplicationContext(), com.example.cs496_week2.AddContactActivity.class);
 //                    startActivity(intent);
 //                } else {
 //                    Toast.makeText(getContext(), "Cannot add contact.", Toast.LENGTH_SHORT).show();
 //                }
-                jsonParse();
-            }
-        });
+//                jsonParse();
+        }
+    });
 }
 
     public int checkselfpermission(String permission) {
         return PermissionChecker.checkSelfPermission(getContext(), permission);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public boolean Permissioncheck() {
@@ -277,6 +300,7 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
             }
         }
     }
+
     public void jsonParse() {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlstring, null, new Response.Listener<JSONArray>() {
             @Override
@@ -288,21 +312,19 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
                     JSONArray contacts = response;
 
 
-                    Log.d("JsonArray",contacts.toString());
-                    for(int i=0;i<contacts.length();i++){
+                    Log.d("JsonArray", contacts.toString());
+                    for (int i = 0; i < contacts.length(); i++) {
                         JSONObject jresponse = contacts.getJSONObject(i);
 
                         String name = jresponse.getString("name");
-                        Log.d("nickname",name);
+                        Log.d("nickname", name);
                         String number = jresponse.getString("number");
-                        if(i==0)
-                        Toast.makeText(getContext(),name+number,Toast.LENGTH_LONG).show();
+                        if (i == 0)
+                            Toast.makeText(getContext(), name + number, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
 
 
             }
@@ -381,8 +403,7 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
                     obj.put("number", phoneNumber);
 //                    obj.put("img", getStringFromBitmap(bp));
                     jsonArr.add(obj);
-
-
+                        xjsonArr.add(name);
                     new SendDeviceDetails().execute("http://socrip3.kaist.ac.kr:9080/api/contacts", obj.toString());
 
                 } catch (JSONException e) {
@@ -395,10 +416,6 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
         }
 
 //        big.put("contacts", jsonArr);
-
-
-
-
 
 
         File firstmyfile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -418,7 +435,6 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
 //            fileWriter.append(jsonstring);
 
 //            new SendDeviceDetails().execute("http://socrip3.kaist.ac.kr:9080/api/contacts", obj.toString());
-
 
 
         } catch (IOException e) {
@@ -459,6 +475,7 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
     @Override
     public void onPause() {
         super.onPause();
+        AppEventsLogger.deactivateApp(getContext());
         Log.i("전화번호부 fragment", "onPause()");
     }
 
