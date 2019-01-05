@@ -22,7 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -31,11 +33,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.widget.ShareDialog;
@@ -51,6 +59,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.facebook.AccessTokenManager.TAG;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -58,6 +67,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ListView contactsListView;
+
     private Tab1ContactViewAdapter adapter;
     private ArrayList<ContactModel> contactModelArrayList;
     private ArrayList<JSONObject> jsonArr = new ArrayList<JSONObject>();
@@ -66,6 +76,8 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS};
     public int sel_pos = -1;
     private JSONObject big;
+//    private AccessTokenTracker accessTokenTracker;
+//    private AccessToken accessToken;
 
 
     private String urlstring = "http://socrip3.kaist.ac.kr:9080/api/contacts";
@@ -73,25 +85,34 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
     private FloatingActionButton addButton;
     private RequestQueue mQueue;
     private URL url;
-    private CallbackManager callbackManager;
+    private CallbackManager callbackManager, mcallbackManager;
     ShareDialog shareDialog;
+    private TextView tv;
+    private LoginButton loginButton;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("전화번호부 fragment", "onCreateView()");
 
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
 
+        //        Log.i("전화번호부 fragment", "onCreateView()");
+//
         View rootView = inflater.inflate(R.layout.tab1phonebook, container, false);
-        shareDialog = new ShareDialog(getActivity());
+
+
+
+        // Callback registration
+        Log.d("TAGGG", "b4 login");
+
 
 
         //Need to "GET"
         mQueue = Volley.newRequestQueue(getContext());
-        LoginButton facebookLoginButton = (LoginButton) getActivity().findViewById(R.id.facebook_login_button);
+
+
+
+//        LoginButton facebookLoginButton = (LoginButton) getActivity().findViewById(R.id.facebook_login_button);
 
 
         contactsListView = rootView.findViewById(R.id.contactLV);
@@ -101,29 +122,6 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
 
         msgButton = (FloatingActionButton) rootView.findViewById(R.id.messageButton);
         addButton = rootView.findViewById(R.id.addContactButton);
-        facebookLoginButton = rootView.findViewById(R.id.facebook_login_button);
-
-        facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-                Log.i(TAG, "User ID: " + loginResult.getAccessToken().getUserId());
-                Log.i(TAG, "Auth Token: " + loginResult.getAccessToken().getToken());
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-                Log.w(TAG, "Cancel");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Log.e(TAG, "Error", exception);
-            }
-        });
-
 
         return rootView;
     }
@@ -136,11 +134,13 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
 
         AppEventsLogger.activateApp(getContext());
 
+
         if (Permissioncheck()) {
             loadContacts(contactsListView);
         }
 
         WritePermissioncheck();
+
 
 
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,6 +163,9 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
         msgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
                 if (Permissioncheck()) {
                     loadContacts(contactsListView);
                 }
@@ -282,8 +285,9 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     public boolean Permissioncheck() {
@@ -415,7 +419,7 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
             phones.close();
         }
 
-//        big.put("contacts", jsonArr);
+
 
 
         File firstmyfile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -489,5 +493,6 @@ public class Tab1Phonebook extends Fragment implements ActivityCompat.OnRequestP
     public void onDestroy() {
         super.onDestroy();
         Log.i("전화번호부 fragment", "onDestroy()");
+//        accessTokenTracker.stopTracking();
     }
 }
