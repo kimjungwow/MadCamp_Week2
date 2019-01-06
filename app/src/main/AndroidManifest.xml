@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".Tab3Game"></activity>
         <activity
             android:name="com.cs496.cs496_week2.FacebookActivity"
             android:label="@string/app_name"
