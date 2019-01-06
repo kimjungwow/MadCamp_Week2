@@ -139,6 +139,7 @@ public class Tab3Etc extends Fragment {
                 if (receivedData.getString("result").equals("2")) {
                     Log.d(TAG, "Login Success");
                     Intent intent = new Intent(getContext(), Tab3Game.class);
+                    intent.putExtra("id", id);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getContext(), receivedData.getString("alert"), Toast.LENGTH_LONG).show();
