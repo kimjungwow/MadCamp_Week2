@@ -1,6 +1,7 @@
 package com.cs496.cs496_week2;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -31,12 +33,24 @@ public class Tab3Game extends FragmentActivity {
     private EditText texthorse, texthorse1, texthorse2;
     private Socket mSocket, mSocket1, mSocket2;
     private StringBuilder sa,sb,sc;
-    private int which;
+    private View Blue, Green ,Red;
+    private float ax,ay,bx,by,cx,cy;
+    private View Horse1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab3game);
+
+        Blue = (ImageView)findViewById(R.id.blue);
+        Green = (ImageView)findViewById(R.id.green);
+        Red = (ImageView)findViewById(R.id.red);
+
+
+
+
+
+
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
@@ -49,12 +63,22 @@ public class Tab3Game extends FragmentActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Horse1 = (ImageView)findViewById(R.id.horse1);
+                ((ImageView) Horse1).setImageResource(R.drawable.runninghorse);
+                final AnimationDrawable runningHorse = (AnimationDrawable)((ImageView) Horse1).getDrawable();
+                runningHorse.start();
+
+
+
+
+
                 startBtn.setVisibility(View.GONE);
                 texthorse.setText("", null);
-                texthorse.setVisibility(View.VISIBLE);
-                texthorse1.setVisibility(View.VISIBLE);
+//                texthorse.setVisibility(View.VISIBLE);
+//                texthorse1.setVisibility(View.VISIBLE);
+//                texthorse2.setVisibility(View.VISIBLE);
                 texthorse1.setText("", null);
-                texthorse2.setVisibility(View.VISIBLE);
+
                 texthorse2.setText("", null);
 
 
@@ -67,33 +91,103 @@ public class Tab3Game extends FragmentActivity {
                     mSocket = IO.socket("http://socrip3.kaist.ac.kr:9089/");
                     mSocket.connect();
                     mSocket.on(Socket.EVENT_CONNECT, onConnect);
-                    mSocket.on("serverMessage", onMessageReceived);
+                    mSocket.on("Alpha", new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                            System.out.println("\nALPHA\n");
+                            try{
+
+                                StringBuilder sd = new StringBuilder("");
 
 
-
-                    jsonlogin1 = new JSONObject();
-                    jsonlogin1.put("option", "game");
-                    jsonlogin1.put("id", id);
-                    jsonlogin1.put("number",2);
-
-                    mSocket1 = IO.socket("http://socrip3.kaist.ac.kr:9089/");
-                    mSocket1.connect();
-                    mSocket1.on(Socket.EVENT_CONNECT, onConnect);
-                    mSocket1.on("serverMessage", onMessageReceived);
-
-                    jsonlogin2 = new JSONObject();
-                    jsonlogin2.put("option", "game");
-                    jsonlogin2.put("id", id);
-                    jsonlogin2.put("number",3);
+                            JSONArray a = (JSONArray) args[0];
 
 
+                            for (int i = 0; i < a.length(); i++) {
+                                JSONObject b = a.getJSONObject(i);
+                                sd.append(b.toString());
 
-                    mSocket2 = IO.socket("http://socrip3.kaist.ac.kr:9089/");
-                    mSocket2.connect();
-                    mSocket2.on(Socket.EVENT_CONNECT, onConnect);
-                    mSocket2.on("serverMessage", onMessageReceived);
+                                if(i==2) {
+                                    ax = (float) b.getInt("location");
+                                }
+                            }
+
+                            Message msg = new Message();
+                            msg.arg1=1;
+                            msg.obj=sd;
+
+                            handler.sendMessage(msg);
+
+                            }
+                            catch (JSONException e) {
+
+                            }
+
+                        }
+                    });
+
+                    mSocket.on("Bravo", new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                            System.out.println("\nBRAVO\n");
+                            try{
+//                                sa = new StringBuilder("");
+                                StringBuilder sd = new StringBuilder("");
+                                JSONArray a = (JSONArray) args[0];
+
+                                for (int i = 0; i < a.length(); i++) {
+                                    JSONObject b = a.getJSONObject(i);
+                                    sd.append(b.toString());
+
+                                    if(i==2) {
+                                        bx = (float) b.getInt("location");
+                                    }
+                                }
+
+                                Message msg = new Message();
+                                msg.arg1=2;
+                                msg.obj=sd;
 
 
+                                handler.sendMessage(msg);
+
+                            }
+                            catch (JSONException e) {
+                                System.out.println("\nBRAVO EXCEPTION\n");
+                            }
+
+                        }
+                    });
+
+                    mSocket.on("Charlie", new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                            System.out.println("\nCHARLIE\n");
+                            try{
+//                                sa = new StringBuilder("");
+                                StringBuilder sd = new StringBuilder("");
+                                JSONArray a = (JSONArray) args[0];
+                                for (int i = 0; i < a.length(); i++) {
+                                    JSONObject b = a.getJSONObject(i);
+                                    sd.append(b.toString());
+
+                                    if(i==2) {
+                                        cx = (float) b.getInt("location");
+                                    }
+                                }
+
+                                Message msg = new Message();
+                                msg.arg1=3;
+                                msg.obj=sd;
+
+
+                                handler.sendMessage(msg);}
+                            catch (JSONException e) {
+
+                            }
+
+                        }
+                    });
 
 
                 } catch (URISyntaxException e) {
@@ -109,15 +203,50 @@ public class Tab3Game extends FragmentActivity {
 
     final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            switch(which) {
+            System.out.println(msg.arg1);
+
+
+            switch(msg.arg1) {
                 case 1:
-                    texthorse.setText(sa);
+                    Blue.setVisibility(View.VISIBLE);
+
+
+                    Blue.setY(12);
+                    ax = 15*ax;
+                    Blue.setX(ax);
+
+                    Horse1.setY(300);
+                    Horse1.setX(ax);
+
+
+
+
+
+
+                    texthorse.setText((StringBuilder)msg.obj);
                     break;
+
                 case 2:
-                    texthorse1.setText(sb);
+                    Green.setVisibility(View.VISIBLE);
+
+
+                    Green.setY(92);
+                    bx = 15*bx;
+                    Green.setX(bx);
+
+
+
+                    texthorse1.setText((StringBuilder)msg.obj);
                     break;
                 case 3:
-                    texthorse2.setText(sc);
+
+                    Red.setVisibility(View.VISIBLE);
+
+
+                    Red.setY(172);
+                    cx = 15*cx;
+                    Red.setX(cx);
+                    texthorse2.setText((StringBuilder)msg.obj);
                     break;
             }
 
@@ -137,79 +266,7 @@ public class Tab3Game extends FragmentActivity {
         @Override
         public void call(Object... args) {
                     mSocket.emit("clientMessage", jsonlogin);
-                    mSocket1.emit("clientMessage", jsonlogin1);
-                    mSocket2.emit("clientMessage", jsonlogin2);
-
-
-
-
-
-
-
         }
     };
-
-    // 서버로부터 전달받은 'chat-message' Event 처리.
-    private Emitter.Listener onMessageReceived = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            // 전달받은 데이터는 아래와 같이 추출할 수 있습니다.
-            try {
-
-                JSONArray a = (JSONArray) args[0];
-
-
-                sa = new StringBuilder("");
-                sb = new StringBuilder("");
-                sc = new StringBuilder("");
-
-
-                if(a.getJSONObject(0).getString("name").equals("Alpha")) {
-                    for (int i = 0; i < a.length(); i++) {
-                        JSONObject b = a.getJSONObject(i);
-                        sa.append(b.toString());
-
-
-                    }
-                    which=1;
-                }
-
-                else if(a.getJSONObject(0).getString("name").equals("Bravo")) {
-                    for (int i = 0; i < a.length(); i++) {
-                        JSONObject b = a.getJSONObject(i);
-                        sb.append(b.toString());
-                    }
-                    which=2;
-                }
-                else if(a.getJSONObject(0).getString("name").equals("Charlie")) {
-                    for (int i = 0; i < a.length(); i++) {
-                        JSONObject b = a.getJSONObject(i);
-                        sc.append(b.toString());
-                    }
-                    which=3;
-                }
-
-
-
-
-
-
-                Message msg = handler.obtainMessage();
-
-                handler.sendMessage(msg);
-
-
-
-
-
-
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
 
 }
