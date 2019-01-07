@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import net.alhazmy13.imagefilter.ImageFilter;
 
 import java.text.SimpleDateFormat;
@@ -88,8 +90,9 @@ public class ZoomActivity extends FragmentActivity {
         super.onResume();
         final String imgPath = getIntent().getStringExtra("imagePath");
         if (imgPath != ""){
+            Glide.with(getApplicationContext()).load(imgPath).into(zoomview);
             mainImage = BitmapFactory.decodeFile(imgPath);
-            zoomview.setImageBitmap(mainImage);
+//            zoomview.setImageBitmap(mainImage);
             LoadFilterThumbnails();
         }
         else {
