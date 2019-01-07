@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import net.alhazmy13.imagefilter.ImageFilter;
 
 import java.text.SimpleDateFormat;
@@ -88,8 +90,9 @@ public class ZoomActivity extends FragmentActivity {
         super.onResume();
         final String imgPath = getIntent().getStringExtra("imagePath");
         if (imgPath != ""){
+            Glide.with(getApplicationContext()).load(imgPath).into(zoomview);
             mainImage = BitmapFactory.decodeFile(imgPath);
-            zoomview.setImageBitmap(mainImage);
+//            zoomview.setImageBitmap(mainImage);
             LoadFilterThumbnails();
         }
         else {
@@ -126,7 +129,7 @@ public class ZoomActivity extends FragmentActivity {
         }
 
         // Create an adapter and set onClickListener
-        FilterThumbnailAdapter adapter = new FilterThumbnailAdapter(thumbnails, new FilterThumbnailAdapter.OnItemClickListener() {
+        FilterThumbnailAdapter adapter = new FilterThumbnailAdapter(getApplicationContext(), thumbnails, new FilterThumbnailAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(FilteredThumbnail item) {
                 LoadPicture(item.getFilterTypeIndex());
@@ -139,8 +142,14 @@ public class ZoomActivity extends FragmentActivity {
     }
 
     private void LoadPicture(int index){
-        if (index == 0) zoomview.setImageBitmap(mainImage);
-        else zoomview.setImageBitmap(ApplyFilterByIndex(mainImage, index));
+        if (index == 0) {
+            Glide.with(getApplicationContext()).load(mainImage).into(zoomview);
+            //zoomview.setImageBitmap(mainImage);
+        }
+        else {
+            Glide.with(getApplicationContext()).load(ApplyFilterByIndex(mainImage, index)).into(zoomview);
+            // zoomview.setImageBitmap(ApplyFilterByIndex(mainImage, index));
+        }
         return;
     }
 

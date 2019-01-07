@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 /**
@@ -70,7 +73,8 @@ public class Tab1ContactViewAdapter extends BaseAdapter {
 
         holder.tvname.setText(contactModelArrayList.get(position).getName());
         holder.tvnumber.setText(contactModelArrayList.get(position).getNumber());
-        holder.ivphoto.setImageBitmap(contactModelArrayList.get(position).getIcon());
+        Glide.with(context).load(contactModelArrayList.get(position).getIcon()).into(holder.ivphoto);
+        // holder.ivphoto.setImageBitmap(contactModelArrayList.get(position).getIcon());
 
         return convertView;
     }
