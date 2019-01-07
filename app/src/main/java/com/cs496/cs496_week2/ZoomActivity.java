@@ -129,7 +129,7 @@ public class ZoomActivity extends FragmentActivity {
         }
 
         // Create an adapter and set onClickListener
-        FilterThumbnailAdapter adapter = new FilterThumbnailAdapter(thumbnails, new FilterThumbnailAdapter.OnItemClickListener() {
+        FilterThumbnailAdapter adapter = new FilterThumbnailAdapter(getApplicationContext(), thumbnails, new FilterThumbnailAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(FilteredThumbnail item) {
                 LoadPicture(item.getFilterTypeIndex());
@@ -142,8 +142,14 @@ public class ZoomActivity extends FragmentActivity {
     }
 
     private void LoadPicture(int index){
-        if (index == 0) zoomview.setImageBitmap(mainImage);
-        else zoomview.setImageBitmap(ApplyFilterByIndex(mainImage, index));
+        if (index == 0) {
+            Glide.with(getApplicationContext()).load(mainImage).into(zoomview);
+            //zoomview.setImageBitmap(mainImage);
+        }
+        else {
+            Glide.with(getApplicationContext()).load(ApplyFilterByIndex(mainImage, index)).into(zoomview);
+            // zoomview.setImageBitmap(ApplyFilterByIndex(mainImage, index));
+        }
         return;
     }
 

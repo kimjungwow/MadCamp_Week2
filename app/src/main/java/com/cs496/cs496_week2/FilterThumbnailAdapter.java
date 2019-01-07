@@ -8,9 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class FilterThumbnailAdapter extends RecyclerView.Adapter<FilterThumbnailAdapter.ViewHolder>{
+    private Context mContext;
+
     public interface OnItemClickListener {
         void onItemClick(FilteredThumbnail item);
     }
@@ -37,7 +41,8 @@ public class FilterThumbnailAdapter extends RecyclerView.Adapter<FilterThumbnail
     private ArrayList<FilteredThumbnail> thumbnails;
     private final OnItemClickListener listener;
 
-    public FilterThumbnailAdapter(ArrayList<FilteredThumbnail> newThumbnails, OnItemClickListener listener){
+    public FilterThumbnailAdapter(Context context, ArrayList<FilteredThumbnail> newThumbnails, OnItemClickListener listener){
+        this.mContext = context;
         this.thumbnails = newThumbnails;
         this.listener = listener;
     }
@@ -66,7 +71,8 @@ public class FilterThumbnailAdapter extends RecyclerView.Adapter<FilterThumbnail
         TextView textView = viewHolder.tvfilterName;
         textView.setText(thumbnail.getFilterType());
         ImageView imageView = viewHolder.ivfilterImg;
-        imageView.setImageBitmap(thumbnail.getImgBP());
+        Glide.with(mContext).load(thumbnail.getImgBP()).into(imageView);
+        //imageView.setImageBitmap(thumbnail.getImgBP());
     }
 
     // Returns the total count of items in the list

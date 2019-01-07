@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -212,7 +213,8 @@ public class CameraActivity extends AppCompatActivity {
 
             Bitmap bitmap = CameraUtils.optimizeBitmap(BITMAP_SAMPLE_SIZE, imageStoragePath);
 
-            imgPreview.setImageBitmap(bitmap);
+            Glide.with(getApplicationContext()).load(bitmap).into(imgPreview);
+            // imgPreview.setImageBitmap(bitmap);
 
         } catch (NullPointerException e) {
             e.printStackTrace();
