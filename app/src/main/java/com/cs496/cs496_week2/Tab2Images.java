@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.PermissionChecker;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 
@@ -27,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -48,6 +51,8 @@ public class Tab2Images extends Fragment {
     boolean writePermission;
     private String userId;
     private RequestQueue mQueue;
+
+    FloatingActionButton syncButton;
 
     private ArrayList<String> imagePaths;
     private ArrayList<String> imageHashs;
@@ -71,6 +76,14 @@ public class Tab2Images extends Fragment {
         imageHashs = new ArrayList<>();
         //imageInfos = new ArrayList<>();
 
+        syncButton = rootView.findViewById(R.id.syncButton);
+        syncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                syncWithServer();
+            }
+        });
+
         return rootView;
     }
 
@@ -92,7 +105,6 @@ public class Tab2Images extends Fragment {
                 }
             }
         });
-        clientToServer();
     }
 
     protected ArrayList<String> getImagesPath(Activity activity) {
@@ -136,17 +148,39 @@ public class Tab2Images extends Fragment {
         gridview.setAdapter(adapter);
     }
 
-    public void clientToServer() {
+    public void getImageFile(String imageHash) {
+        String urlstring = "http://socrip3.kaist.ac.kr:9980/api/galleries/image/";
+        Log.i("SYNC", "Started");
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, urlstring + imageHash, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String imgFile = response.getString("imageFile");
+                    Log.i("imgFile", imgFile);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        mQueue.add(request);
+    }
+
+    public void syncWithServer() {
         String urlstring = "http://socrip3.kaist.ac.kr:9980/api/galleries";
-        Log.i("CLIENTTOSERVER","Started");
+        Log.i("SYNC","Started");
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlstring + "/fbid/" + userId, null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-                Log.i("CLIENTTOSERVER","ONRESPONSE!");
+                Log.i("SYNC","ONRESPONSE!");
                 if(response.length() > imagePaths.size()) {
                     try {
-                        Log.i("CLIENTTOSERVER","server more");
+                        Log.i("SYNC-ServerToClient","server more");
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject imgInfo = response.getJSONObject(i);
 
@@ -154,13 +188,7 @@ public class Tab2Images extends Fragment {
 
                             if(!imageHashs.contains(imgHash)) {
                                 int idx = imageHashs.indexOf(imgHash);
-                                sendImageInfos(imageHashs.get(idx),imagePaths.get(idx));
-
-                                //SEND WITH
-                                //imageHash: imageHashs.get(idx);
-                                //imageUrl: imagePaths.get(idx);
-                                //fbid: userId;
-                                //IMAGE: getBase64String(BitmapFactory.decodeFile(imgPath))
+                                getImageFile(imgHash);
                             }
                         }
                     } catch (JSONException e) {
@@ -168,7 +196,7 @@ public class Tab2Images extends Fragment {
                     }
                 } else {
                     try {
-                        Log.i("CLIENTTOSERVER","client more");
+                        Log.i("SYNC-ClientToSever","client more");
                         ArrayList<String> resHashes = new ArrayList<>();
                         for(int j = 0; j < response.length(); j++) {
                             JSONObject imgInfo = response.getJSONObject(j);
@@ -176,6 +204,7 @@ public class Tab2Images extends Fragment {
                         }
                         for(int i = 0; i < imageHashs.size(); i++) {
                             if (!resHashes.contains(imageHashs.get(i))) {
+                                Log.i("****", "SENDIMAGEINFO!");
                                 sendImageInfos(imageHashs.get(i),imagePaths.get(i));
                             }
                         }

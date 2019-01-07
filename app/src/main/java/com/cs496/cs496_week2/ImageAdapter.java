@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class ImageAdapter extends BaseAdapter {
@@ -46,16 +48,19 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView==null)
             convertView = inf.inflate(layout, null);
         ImageView iv = (ImageView)convertView.findViewById(R.id.imageView1);
-        Bitmap img = BitmapFactory.decodeFile(getItem(position));
-        double width = img.getWidth();
-        double height = img.getHeight();
-        int desiredWidth = 120;
-        int desiredHeight = 120;
-        if (width / height >= 1.2 && width/height <=0.8) {
-            desiredHeight = (int) (height * desiredWidth / width);
-        }
-        img = Bitmap.createScaledBitmap(img, desiredWidth, desiredHeight, true);
-        iv.setImageBitmap(img);
+
+        Glide.with(context).load(getItem(position)).into(iv);
+
+//        Bitmap img = BitmapFactory.decodeFile(getItem(position));
+//        double width = img.getWidth();
+//        double height = img.getHeight();
+//        int desiredWidth = 120;
+//        int desiredHeight = 120;
+//        if (width / height >= 1.2 && width/height <=0.8) {
+//            desiredHeight = (int) (height * desiredWidth / width);
+//        }
+//        img = Bitmap.createScaledBitmap(img, desiredWidth, desiredHeight, true);
+//        iv.setImageBitmap(img);
 
         return convertView;
     }
