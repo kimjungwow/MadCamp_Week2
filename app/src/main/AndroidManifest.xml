@@ -34,6 +34,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:screenOrientation="landscape" android:configChanges="orientation|keyboardHidden" android:name=".Tab3Bet"> </activity>
+
         <activity android:screenOrientation="landscape" android:configChanges="orientation|keyboardHidden" android:name=".Tab3Game">
 
         </activity>
