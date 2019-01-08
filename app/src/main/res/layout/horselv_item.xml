@@ -25,7 +25,7 @@
             android:layout_marginRight = "30dp">
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
@@ -33,21 +33,23 @@
                 android:text="Name"
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                  />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/forspeed"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:text="  Speed : "
+                android:text=" Speed : "
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                 />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/speed"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
@@ -55,21 +57,23 @@
                 android:text="Speed"
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                 />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/foracceleration"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:text="  Acceleration : "
+                android:text=" Acceleration : "
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                 />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/acceleration"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
@@ -77,21 +81,23 @@
                 android:text="Acceleration"
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                  />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/formaxSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:text="  maxSpeed : "
+                android:text=" MaxSpeed : "
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                 />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/maxSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
@@ -99,22 +105,24 @@
                 android:text="MaxSpeed"
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
 
                  />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/forfallOff"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:text="  fallOff : "
+                android:text=" FallOff : "
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                 />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/fallOff"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
@@ -122,21 +130,23 @@
                 android:text="FallOff"
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                  />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/fordividendRate"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:text="  dividenRate : "
+                android:text=" DividenRate : "
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                 />
 
             <TextView
-                android:fontFamily="@font/tvn"
+                android:fontFamily="@font/ng"
                 android:id="@+id/dividendRate"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
@@ -144,6 +154,7 @@
                 android:text="DividendRate"
                 android:textAlignment="center"
                 android:textColor="#000"
+                android:textSize="16sp"
                  />
 
 

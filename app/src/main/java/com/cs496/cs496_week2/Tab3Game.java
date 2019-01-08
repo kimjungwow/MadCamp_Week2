@@ -12,6 +12,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -33,7 +34,7 @@ public class Tab3Game extends FragmentActivity {
 
 
     private View startBtn, betBtn;
-    private String id, sel_name, winner;
+    private String id, sel_name, winner, timestring;
     private int balance;
     private JSONObject jsonlogin, jsonbet;
     private Socket mSocket;
@@ -48,7 +49,8 @@ public class Tab3Game extends FragmentActivity {
     private int betmoney;
     private float ax, ay, bx, by, cx, cy, dx, dy, ex, ey;
     private View Horse1, Horse2, Horse3, Horse4, Horse5;
-    private ImageView HorseWinImage;
+    private TextView resttime, forresttime;
+    private ImageView HorseWinImage, totoimage;
     private String betarray;
 
     @Override
@@ -128,6 +130,18 @@ public class Tab3Game extends FragmentActivity {
                 }
             });
 
+            mSocket.on("timeLeft", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+
+                    timestring=args[0].toString();
+
+                    Message msg = new Message();
+
+                    timehandler.sendMessage(msg);
+                }
+            });
+
             mSocket.on("FirstHorseInfo", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
@@ -160,6 +174,11 @@ public class Tab3Game extends FragmentActivity {
         Horse4 = (ImageView) findViewById(R.id.horse4);
         Horse5 = (ImageView) findViewById(R.id.horse5);
         HorseWinImage = (ImageView) findViewById(R.id.horsewin);
+        totoimage = (ImageView) findViewById(R.id.totoview);
+
+        resttime = (TextView) findViewById(R.id.timetext);
+        forresttime = (TextView) findViewById(R.id.fortimetext);
+
 
 
 
@@ -191,20 +210,21 @@ public class Tab3Game extends FragmentActivity {
         params5.height = imageviewheight;
         Horse5.setLayoutParams(params5);
 
-        ViewGroup.LayoutParams params6 = (ViewGroup.LayoutParams) HorseWinImage.getLayoutParams();
-        params6.width = imageviewwidth;
-        params6.height = imageviewheight;
-        HorseWinImage.setLayoutParams(params6);
+//        ViewGroup.LayoutParams params6 = (ViewGroup.LayoutParams) HorseWinImage.getLayoutParams();
+//        params6.width = imageviewwidth;
+//        params6.height = imageviewheight;
+//        HorseWinImage.setLayoutParams(params6);
 
 
 
         horsegone();
+        forresttime.setVisibility(View.GONE);
 
-        Horse1.setY(0);
-        Horse2.setY(200);
-        Horse3.setY(400);
-        Horse4.setY(600);
-        Horse5.setY(800);
+        Horse1.setY(180);
+        Horse2.setY(320);
+        Horse3.setY(450);
+        Horse4.setY(630);
+        Horse5.setY(820);
 
         ((ImageView) Horse1).setImageResource(R.drawable.runninghorse);
         final AnimationDrawable runningHorse = (AnimationDrawable) ((ImageView) Horse1).getDrawable();
@@ -250,6 +270,7 @@ public class Tab3Game extends FragmentActivity {
         betBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                totoimage.setVisibility(View.GONE);
                 Intent betintent = new Intent(getApplicationContext(), Tab3Bet.class);
                 betintent.putExtra("id", id);
                 betintent.putExtra("horsearray", betarray);
@@ -271,6 +292,7 @@ public class Tab3Game extends FragmentActivity {
 
                 startBtn.setVisibility(View.GONE);
                 betBtn.setVisibility(View.GONE);
+                forresttime.setVisibility(View.VISIBLE);
 
 
 
@@ -306,6 +328,9 @@ public class Tab3Game extends FragmentActivity {
         public void handleMessage(Message msg) {
             try {
                 horsevisible();
+                HorseWinImage.setVisibility(View.GONE);
+
+                betBtn.setVisibility(View.GONE);
                 JSONArray t = (JSONArray) msg.obj;
                 for (int i = 0; i < t.length(); i++) {
                     JSONObject ob = t.getJSONObject(i);
@@ -330,8 +355,12 @@ public class Tab3Game extends FragmentActivity {
             HorseWinImage.setImageResource((int)horsewin.get(winner));
 
 
-            HorseWinImage.setX(horsemap.get(winner).getLeft());
-            HorseWinImage.setY(horsemap.get(winner).getTop());
+            HorseWinImage.setX(width/4);
+            HorseWinImage.setY(height/8
+            );
+//            HorseWinImage.setX(horsemap.get(winner).getLeft());
+//            HorseWinImage.setY(horsemap.get(winner).getTop());
+
 
             HorseWinImage.setVisibility(View.VISIBLE);
             horsegone();
@@ -342,6 +371,16 @@ public class Tab3Game extends FragmentActivity {
         }
     };
 
+
+
+    final Handler timehandler = new Handler() {
+        public void handleMessage(Message msg) {
+
+            resttime.setText(timestring);
+
+
+        }
+    };
 
     // Socket서버에 connect 되면 발생하는 이벤트
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -358,6 +397,8 @@ public class Tab3Game extends FragmentActivity {
         Horse3.setVisibility(View.VISIBLE);
         Horse4.setVisibility(View.VISIBLE);
         Horse5.setVisibility(View.VISIBLE);
+        resttime.setVisibility(View.GONE);
+        forresttime.setVisibility(View.GONE);
     }
 
     private void horsegone() {
@@ -366,6 +407,8 @@ public class Tab3Game extends FragmentActivity {
         Horse3.setVisibility(View.GONE);
         Horse4.setVisibility(View.GONE);
         Horse5.setVisibility(View.GONE);
+        resttime.setVisibility(View.VISIBLE);
+        forresttime.setVisibility(View.VISIBLE);
     }
 
 }

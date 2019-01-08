@@ -5,9 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/laneview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/lane"
+        android:visibility="visible" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +38,19 @@
             tools:layout_editor_absoluteX="530dp"
             tools:layout_editor_absoluteY="257dp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/totoview"
+        android:layout_width="454dp"
+        android:layout_height="197dp"
+        android:background="@drawable/toto"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horsewin"
+        app:layout_constraintVertical_bias="0.62" />
 
 
     <ImageView
@@ -70,36 +90,36 @@
         android:id="@+id/horse1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/horse11"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:srcCompat="@drawable/horse11" />
 
     <ImageView
         android:id="@+id/horse2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/red11"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:srcCompat="@drawable/red11" />
 
     <ImageView
         android:id="@+id/horse3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/green11"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:srcCompat="@drawable/green11" />
 
     <ImageView
         android:id="@+id/horse4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/yellow11"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:srcCompat="@drawable/yellow11" />
 
     <ImageView
         android:id="@+id/horse5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/blue11"
         android:visibility="gone"
+        app:srcCompat="@drawable/blue11"
 
         />
 
@@ -107,8 +127,43 @@
         android:id="@+id/horsewin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:srcCompat="@drawable/winblue"
-        android:visibility="gone"/>
+        tools:layout_editor_absoluteX="125dp"
+        tools:layout_editor_absoluteY="68dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/timetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="23sp"
+            tools:layout_editor_absoluteX="231dp"
+            tools:layout_editor_absoluteY="265dp" />
+
+        <TextView
+            android:id="@+id/fortimetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="초 후에 새 게임이 시작됩니다."
+            android:textSize="23sp"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="231dp"
+            tools:layout_editor_absoluteY="265dp" />
+
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

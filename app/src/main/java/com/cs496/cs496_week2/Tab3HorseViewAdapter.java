@@ -79,12 +79,35 @@ public class Tab3HorseViewAdapter extends BaseAdapter {
         }
 
         holder.tvname.setText(horseModelArrayList.get(position).getName());
-        holder.tvspeed.setText(horseModelArrayList.get(position).getSpeed().toString());
+
         holder.tvacceleration.setText(horseModelArrayList.get(position).getAcceleration().toString());
         holder.tvdividendRate.setText(horseModelArrayList.get(position).getDividendRate().toString());
         holder.tvfallOff.setText(horseModelArrayList.get(position).getFallOff().toString());
 
         holder.tvmaxSpeed.setText(horseModelArrayList.get(position).getMaxSpeed().toString());
+
+        switch(position) {
+            case 0:
+                holder.tvspeed.setText(Integer.toString(6));
+                break;
+            case 1:
+                holder.tvspeed.setText(Integer.toString(6));
+                break;
+            case 2:
+                holder.tvspeed.setText(Integer.toString(8));
+                break;
+            case 3:
+                holder.tvspeed.setText(Integer.toString(10));
+                break;
+            case 4:
+                holder.tvspeed.setText(Integer.toString(4));
+                break;
+
+
+
+
+        }
+//        holder.tvspeed.setText(horseModelArrayList.get(position).getSpeed().toString());
 
 
 
