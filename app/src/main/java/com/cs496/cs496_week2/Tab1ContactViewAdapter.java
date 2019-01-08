@@ -1,5 +1,6 @@
 package com.cs496.cs496_week2;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -30,6 +29,7 @@ public class Tab1ContactViewAdapter extends BaseAdapter {
     public int getViewTypeCount() {
         return getCount();
     }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -66,15 +66,14 @@ public class Tab1ContactViewAdapter extends BaseAdapter {
             holder.ivphoto = (ImageView) convertView.findViewById(R.id.contactPhoto);
 
             convertView.setTag(holder);
-        }else {
+        } else {
             // the getTag returns the viewHolder object set as a tag to the view
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.tvname.setText(contactModelArrayList.get(position).getName());
         holder.tvnumber.setText(contactModelArrayList.get(position).getNumber());
-        Glide.with(context).load(contactModelArrayList.get(position).getIcon()).into(holder.ivphoto);
-        // holder.ivphoto.setImageBitmap(contactModelArrayList.get(position).getIcon());
+        holder.ivphoto.setImageBitmap(contactModelArrayList.get(position).getIcon());
 
         return convertView;
     }

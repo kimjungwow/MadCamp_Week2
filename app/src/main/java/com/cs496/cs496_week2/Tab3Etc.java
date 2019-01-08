@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,12 +45,61 @@ public class Tab3Etc extends Fragment {
         textid.setText("", null);
         textpw.setText("", null);
 
+        try {
+            mSocket = IO.socket("http://socrip3.kaist.ac.kr:9089/");
+            mSocket.on(Socket.EVENT_CONNECT, onConnect);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
+        mSocket.on("serverMessage", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    Log.i("taggg", args[0].toString());
+                    JSONObject m = new JSONObject(args[0].toString());
+                    Intent intent = new Intent(getContext(), Tab3Game.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("balance", m.getInt("balance"));
+                    startActivity(intent);
+
+                }
+                catch(JSONException e){}
+
+           }
+        });
+
+        mSocket.on(
+                "userInfo", new Emitter.Listener() {
+                    @Override
+
+                    public void call(Object... args) {
+                        try {
+                            JSONObject m = new JSONObject(args[0].toString());
+                            Intent intent = new Intent(getContext(), Tab3Game.class);
+                            intent.putExtra("id", id);
+                            intent.putExtra("balance", m.getInt("balance"));
+                            startActivity(intent);
+
+                        }
+                        catch(JSONException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+
         signinBtn = rootView.findViewById(R.id.signin);
-
-
         signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
+
+
+
+
                 id = textid.getText().toString();
                 password = textpw.getText().toString();
 
@@ -61,18 +111,15 @@ public class Tab3Etc extends Fragment {
                     textid.setText("", null);
                     textpw.setText("", null);
 
-                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9089/");
-//                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9080/");
                     mSocket.connect();
-                    mSocket.on(Socket.EVENT_CONNECT, onConnect);
-                    mSocket.on("serverMessage", onMessageReceived);
 
+//                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9080/");
+                    //mSocket.on("serverMessage", onMessageReceived);
 
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
         });
 
@@ -92,16 +139,13 @@ public class Tab3Etc extends Fragment {
                     jsonlogin.put("password", password);
                     textid.setText("", null);
                     textpw.setText("", null);
-
-                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9089/");
-//                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9080/");
+//
+//                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9089/");
+////                    mSocket = IO.socket("http://socrip3.kaist.ac.kr:9080/");
                     mSocket.connect();
-                    mSocket.on(Socket.EVENT_CONNECT, onConnect);
-                    mSocket.on("serverMessage", onMessageReceived);
+                    //mSocket.on("serverMessage", onMessageReceived);
+                    //mSocket.on(Socket.EVENT_CONNECT, onConnect);
 
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

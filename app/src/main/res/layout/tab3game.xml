@@ -26,8 +26,8 @@
         <ImageButton
             android:id="@+id/betbutton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/money"
+            android:layout_height="match_parent"
+            android:background="@drawable/money"
             tools:layout_editor_absoluteX="530dp"
             tools:layout_editor_absoluteY="257dp" />
     </LinearLayout>

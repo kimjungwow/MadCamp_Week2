@@ -24,11 +24,11 @@
                 tools:layout_editor_absoluteX="120dp"
                 tools:layout_editor_absoluteY="125dp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/balanceedit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="textpw"
+                android:text="        "
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 tools:layout_editor_absoluteX="120dp"
                 tools:layout_editor_absoluteY="125dp" />
@@ -50,20 +50,26 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 tools:layout_editor_absoluteX="120dp"
                 tools:layout_editor_absoluteY="125dp" />
+            <TextView
+                android:id="@+id/blank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="           "
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                tools:layout_editor_absoluteX="120dp"
+                tools:layout_editor_absoluteY="125dp" />
             <ImageButton
                 android:id="@+id/betbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/start"
+
+
+android:background="@drawable/start"
                 tools:layout_editor_absoluteX="530dp"
                 tools:layout_editor_absoluteY="257dp" />
 
 
         </LinearLayout>
-
-
-
-
 
 
             <ListView
