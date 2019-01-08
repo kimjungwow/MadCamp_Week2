@@ -70,43 +70,45 @@
         android:id="@+id/horse1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="95dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/horse11" />
+        app:srcCompat="@drawable/horse11"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/horse2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/horse1"
-        app:layout_constraintTop_toTopOf="@+id/horse1"
-        app:srcCompat="@drawable/horse11" />
+        app:srcCompat="@drawable/red11"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/horse3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/horse1"
-        app:layout_constraintTop_toTopOf="@+id/horse1"
-        app:srcCompat="@drawable/horse11" />
+        app:srcCompat="@drawable/green11"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/horse4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/horse1"
-        app:layout_constraintTop_toTopOf="@+id/horse1"
-        app:srcCompat="@drawable/horse11" />
+        app:srcCompat="@drawable/yellow11"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/horse5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/horse1"
-        app:layout_constraintTop_toTopOf="@+id/horse1"
-        app:srcCompat="@drawable/horse11" />
+        app:srcCompat="@drawable/blue11"
+        android:visibility="gone"
+
+        />
+
+    <ImageView
+        android:id="@+id/horsewin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/winblue"
+        android:visibility="gone"/>
 
 
 </android.support.constraint.ConstraintLayout>
